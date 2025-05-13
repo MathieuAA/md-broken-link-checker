@@ -1,0 +1,14 @@
+import FileContentPort from '../domain/FileContentPort';
+import FileContent from '../domain/FileContent';
+import { WrongFileExtensionError } from './errors/primary/WrongFileExtensionError';
+
+export default class ReadFileStep {
+  constructor(private readonly fileContentGetter: FileContentPort) {}
+
+  async execute(filePath: string): Promise<FileContent> {
+    if (!filePath.endsWith('.md')) {
+      throw new WrongFileExtensionError(filePath, 'md');
+    }
+    return this.fileContentGetter.get(filePath);
+  }
+}

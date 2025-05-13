@@ -1,0 +1,31 @@
+{
+  "name": "md-broken-link-checker",
+  "version": "0.0.1",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky",
+    "test": "vitest --config base.vitest.config.js",
+    "test:watch": "vitest",
+    "test:unit": "vitest --config unit.vitest.config.js",
+    "test:integration": "vitest --config integration.vitest.config.js"
+  },
+  "keywords": [],
+  "author": "MathieuAA (https://github.com/MathieuAA)",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "axios": "1.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.17",
+    "@typescript-eslint/eslint-plugin": "8.32.0",
+    "@typescript-eslint/parser": "8.32.0",
+    "eslint": "9.26.0",
+    "husky": "9.1.7",
+    "lint-staged": "15.5.2",
+    "prettier": "3.5.3",
+    "tsx": "4.19.4",
+    "typescript": "5.8.3",
+    "vitest": "3.1.3"
+  }
+}
