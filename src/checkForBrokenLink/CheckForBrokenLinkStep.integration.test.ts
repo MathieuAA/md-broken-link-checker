@@ -6,6 +6,7 @@ import NotFoundError from "./secondary/NotFoundError";
 import NoContentError from "./secondary/NoContentError";
 import UnknownError from "./secondary/UnknownError";
 import UnauthorizedError from "./secondary/UnauthorizedError";
+import ForbiddenError from "./secondary/ForbiddenError";
 
 describe('CheckForBrokenLinkStep - integration test', () => {
   describe('when the link is valid and working', () => {
@@ -52,6 +53,20 @@ describe('CheckForBrokenLinkStep - integration test', () => {
       await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/401'))).rejects.toThrow(UnauthorizedError);
     });
   });
+
+  describe('when the link is valid but it is forbidden (403)', () => {
+    let step: CheckForBrokenLinkStep;
+
+    beforeAll(async () => {
+      const httpService = new HTTPLinkAdapter();
+      step = new CheckForBrokenLinkStep(httpService);
+    });
+
+    it('should fail', async () => {
+      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/403'))).rejects.toThrow(ForbiddenError);
+    });
+  });
+
 
   describe('when the link is invalid', () => {
     describe('because the ressource does not exist (404)', () => {

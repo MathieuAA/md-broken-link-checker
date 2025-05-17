@@ -5,6 +5,7 @@ import NoContentError from './NoContentError';
 import UnauthorizedError from './UnauthorizedError';
 import NotFoundError from './NotFoundError';
 import UnknownError from './UnknownError';
+import ForbiddenError from "./ForbiddenError";
 
 export default class HTTPLinkAdapter implements LinkPort {
   async checkValid(link: Link): Promise<void> {
@@ -32,6 +33,8 @@ export default class HTTPLinkAdapter implements LinkPort {
       switch (statusCode) {
         case 401:
           throw new UnauthorizedError(url);
+        case 403:
+          throw new ForbiddenError(url);
         case 404:
           throw new NotFoundError(url);
       }
