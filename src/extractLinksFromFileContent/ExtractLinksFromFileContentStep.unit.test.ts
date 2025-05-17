@@ -18,9 +18,9 @@ describe('ExtractLinksFromFileContent', () => {
     it('should return them', () => {
       expect(links.length).to.equal(2);
       expect(links[0].getTitle()).to.equal('Here');
-      expect(links[0].getValue()).to.equal('https://www.google.fr/');
+      expect(links[0].getValue().toString()).to.equal('https://www.google.fr/');
       expect(links[1].getTitle()).to.equal('there');
-      expect(links[1].getValue()).to.equal('https://duckduckgo.com/');
+      expect(links[1].getValue().toString()).to.equal('https://duckduckgo.com/');
     });
   });
 

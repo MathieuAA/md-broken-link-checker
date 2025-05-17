@@ -2,7 +2,9 @@
   "name": "md-broken-link-checker",
   "version": "0.0.1",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "check-compilation-errors": "tsc --noEmit true -p .",
     "prepare": "husky",
     "test": "vitest --config base.vitest.config.js",
     "test:watch": "vitest",

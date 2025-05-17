@@ -7,7 +7,7 @@ export default class Link {
   getTitle(): string {
     return this.title;
   }
-  getValue(): string {
-    return this.value;
+  getValue(): URL {
+    return new URL(this.value);
   }
 }
