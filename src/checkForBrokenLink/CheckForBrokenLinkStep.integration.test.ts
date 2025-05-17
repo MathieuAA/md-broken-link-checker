@@ -5,6 +5,7 @@ import HTTPLinkAdapter from './secondary/HTTPLinkAdapter';
 import NotFoundError from "./secondary/NotFoundError";
 import NoContentError from "./secondary/NoContentError";
 import UnknownError from "./secondary/UnknownError";
+import UnauthorizedError from "./secondary/UnauthorizedError";
 
 describe('CheckForBrokenLinkStep - integration test', () => {
   describe('when the link is valid and working', () => {
@@ -36,6 +37,19 @@ describe('CheckForBrokenLinkStep - integration test', () => {
 
     it('should fail', async () => {
       await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/204'))).rejects.toThrow(NoContentError);
+    });
+  });
+
+  describe('when the link is valid but an authorization is needed (401)', () => {
+    let step: CheckForBrokenLinkStep;
+
+    beforeAll(async () => {
+      const httpService = new HTTPLinkAdapter();
+      step = new CheckForBrokenLinkStep(httpService);
+    });
+
+    it('should fail', async () => {
+      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/401'))).rejects.toThrow(UnauthorizedError);
     });
   });
 

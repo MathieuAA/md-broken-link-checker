@@ -1,32 +1,42 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError } from 'axios';
 import LinkPort from '../../domain/LinkPort';
 import Link from '../../domain/Link';
-import NotFoundError from './NotFoundError.js';
 import NoContentError from './NoContentError';
+import UnauthorizedError from './UnauthorizedError';
+import NotFoundError from './NotFoundError';
 import UnknownError from './UnknownError';
 
 export default class HTTPLinkAdapter implements LinkPort {
   async checkValid(link: Link): Promise<void> {
-    const url = link.getValue().toString();
+    const url = link.getValue();
     
     try {
-      const response = await axios.head(url);
+      const response = await axios.head(url.toString());
       
       if (response.status === 204) {
-        throw new NoContentError(new URL(url));
+        throw new NoContentError(url);
       }
-      
-      return Promise.resolve();
     } catch (error) {
-      if (error instanceof AxiosError && error.response?.status === 404) {
-        throw new NotFoundError(url);
-      }
-      
       if (error instanceof NoContentError) {
         throw error;
       }
 
-      throw new UnknownError(new URL(url));
+      HTTPLinkAdapter.handleError(error as Error, url);
     }
+  }
+  
+  private static handleError(error: Error, url: URL): never {
+    if (error instanceof AxiosError && error.response) {
+      const statusCode = error.response.status;
+      
+      switch (statusCode) {
+        case 401:
+          throw new UnauthorizedError(url);
+        case 404:
+          throw new NotFoundError(url);
+      }
+    }
+    
+    throw new UnknownError(url);
   }
 }
