@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeAll } from 'vitest';
-import { FileNotFoundError } from './errors/secondary/FileNotFoundError';
-import { WrongFileExtensionError } from './errors/primary/WrongFileExtensionError';
+import { FileNotFoundError } from './secondary/FileNotFoundError';
+import { WrongFileExtensionError } from './WrongFileExtensionError';
 import ReadFileStep from './ReadFileStep';
 import FileContent from '../domain/FileContent';
 import InMemoryFileContentAdapter from './secondary/InMemoryFileContentAdapter';

@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import FileContent from '../../domain/FileContent';
 import FileContentPort from '../../domain/FileContentPort';
-import { FileNotFoundError } from '../errors/secondary/FileNotFoundError';
+import { FileNotFoundError } from './FileNotFoundError';
 
 export default class FileSystemFileContentAdapter implements FileContentPort {
   async get(filePath: string): Promise<FileContent> {

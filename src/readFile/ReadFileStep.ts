@@ -1,6 +1,6 @@
 import FileContentPort from '../domain/FileContentPort';
 import FileContent from '../domain/FileContent';
-import { WrongFileExtensionError } from './errors/primary/WrongFileExtensionError';
+import { WrongFileExtensionError } from './WrongFileExtensionError';
 
 export default class ReadFileStep {
   constructor(private readonly fileContentGetter: FileContentPort) {}
