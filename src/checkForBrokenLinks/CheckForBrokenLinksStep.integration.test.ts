@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeAll } from 'vitest';
 import Link from '../domain/Link';
-import CheckForBrokenLinkStep from './CheckForBrokenLinkStep';
+import CheckForBrokenLinks from './CheckForBrokenLinks';
 import HTTPLinkAdapter from './secondary/HTTPLinkAdapter';
 import NotFoundError from '../domain/linkErrors/NotFoundError';
 import NoContentError from '../domain/linkErrors/NoContentError';
@@ -14,7 +14,7 @@ describe('CheckForBrokenLinkStep - integration test', () => {
 
     beforeAll(async () => {
       const httpService = new HTTPLinkAdapter();
-      const step = new CheckForBrokenLinkStep(httpService);
+      const step = new CheckForBrokenLinks(httpService);
       try {
         await step.execute(new Link('Test link', 'https://httpstat.us/200'));
       } catch (error) {
@@ -28,11 +28,11 @@ describe('CheckForBrokenLinkStep - integration test', () => {
   });
 
   describe('when the link is valid but there is no response (204)', () => {
-    let step: CheckForBrokenLinkStep;
+    let step: CheckForBrokenLinks;
 
     beforeAll(async () => {
       const httpService = new HTTPLinkAdapter();
-      step = new CheckForBrokenLinkStep(httpService);
+      step = new CheckForBrokenLinks(httpService);
     });
 
     it('should fail', async () => {
@@ -43,11 +43,11 @@ describe('CheckForBrokenLinkStep - integration test', () => {
   });
 
   describe('when the link is valid but an authorization is needed (401)', () => {
-    let step: CheckForBrokenLinkStep;
+    let step: CheckForBrokenLinks;
 
     beforeAll(async () => {
       const httpService = new HTTPLinkAdapter();
-      step = new CheckForBrokenLinkStep(httpService);
+      step = new CheckForBrokenLinks(httpService);
     });
 
     it('should fail', async () => {
@@ -58,11 +58,11 @@ describe('CheckForBrokenLinkStep - integration test', () => {
   });
 
   describe('when the link is valid but it is forbidden (403)', () => {
-    let step: CheckForBrokenLinkStep;
+    let step: CheckForBrokenLinks;
 
     beforeAll(async () => {
       const httpService = new HTTPLinkAdapter();
-      step = new CheckForBrokenLinkStep(httpService);
+      step = new CheckForBrokenLinks(httpService);
     });
 
     it('should fail', async () => {
@@ -74,11 +74,11 @@ describe('CheckForBrokenLinkStep - integration test', () => {
 
   describe('when the link is invalid', () => {
     describe('because the ressource does not exist (404)', () => {
-      let step: CheckForBrokenLinkStep;
+      let step: CheckForBrokenLinks;
 
       beforeAll(async () => {
         const httpService = new HTTPLinkAdapter();
-        step = new CheckForBrokenLinkStep(httpService);
+        step = new CheckForBrokenLinks(httpService);
       });
 
       it('should fail', async () => {
@@ -90,11 +90,11 @@ describe('CheckForBrokenLinkStep - integration test', () => {
   });
 
   describe('when an unknown error appears', () => {
-    let step: CheckForBrokenLinkStep;
+    let step: CheckForBrokenLinks;
 
     beforeAll(async () => {
       const httpService = new HTTPLinkAdapter();
-      step = new CheckForBrokenLinkStep(httpService);
+      step = new CheckForBrokenLinks(httpService);
     });
 
     it('should fail', async () => {
