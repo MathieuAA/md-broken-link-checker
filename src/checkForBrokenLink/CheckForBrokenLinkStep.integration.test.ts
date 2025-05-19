@@ -2,11 +2,11 @@ import { describe, expect, it, beforeAll } from 'vitest';
 import Link from '../domain/Link';
 import CheckForBrokenLinkStep from './CheckForBrokenLinkStep';
 import HTTPLinkAdapter from './secondary/HTTPLinkAdapter';
-import NotFoundError from "./secondary/NotFoundError";
-import NoContentError from "./secondary/NoContentError";
-import UnknownError from "./secondary/UnknownError";
-import UnauthorizedAccessError from "./secondary/UnauthorizedAccessError";
-import ForbiddenAccessError from "./secondary/ForbiddenAccessError";
+import NotFoundError from "../domain/linkErrors/NotFoundError";
+import NoContentError from "../domain/linkErrors/NoContentError";
+import UnknownError from "../domain/linkErrors/UnknownError";
+import UnauthorizedAccessError from "../domain/linkErrors/UnauthorizedAccessError";
+import ForbiddenAccessError from "../domain/linkErrors/ForbiddenAccessError";
 
 describe('CheckForBrokenLinkStep - integration test', () => {
   describe('when the link is valid and working', () => {

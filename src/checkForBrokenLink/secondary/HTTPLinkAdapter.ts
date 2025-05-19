@@ -1,11 +1,11 @@
 import axios, { AxiosError } from 'axios';
 import LinkPort from '../../domain/LinkPort';
 import Link from '../../domain/Link';
-import NoContentError from './NoContentError';
-import UnauthorizedAccessError from './UnauthorizedAccessError';
-import NotFoundError from './NotFoundError';
-import UnknownError from './UnknownError';
-import ForbiddenAccessError from "./ForbiddenAccessError";
+import NoContentError from '../../domain/linkErrors/NoContentError';
+import UnauthorizedAccessError from '../../domain/linkErrors/UnauthorizedAccessError';
+import NotFoundError from '../../domain/linkErrors/NotFoundError';
+import UnknownError from '../../domain/linkErrors/UnknownError';
+import ForbiddenAccessError from "../../domain/linkErrors/ForbiddenAccessError";
 
 export default class HTTPLinkAdapter implements LinkPort {
   async checkValid(link: Link): Promise<void> {
@@ -22,24 +22,26 @@ export default class HTTPLinkAdapter implements LinkPort {
         throw error;
       }
 
-      HTTPLinkAdapter.handleError(error as Error, url);
+      HTTPLinkAdapter.handleError(error as Error, link);
     }
   }
   
-  private static handleError(error: Error, url: URL): never {
+  private static handleError(error: Error, link: Link): never {
     if (error instanceof AxiosError && error.response) {
       const statusCode = error.response.status;
       
       switch (statusCode) {
         case 401:
-          throw new UnauthorizedAccessError(url);
+          throw new UnauthorizedAccessError(link);
         case 403:
-          throw new ForbiddenAccessError(url);
+          throw new ForbiddenAccessError(link);
         case 404:
-          throw new NotFoundError(url);
+          throw new NotFoundError(link);
+        default:
+          throw new UnknownError(link, { statusCode });
       }
     }
     
-    throw new UnknownError(url);
+    throw new UnknownError(link, { error: { name: error.name, message: error.message }});
   }
 }
