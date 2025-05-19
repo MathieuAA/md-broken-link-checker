@@ -2,10 +2,10 @@ import axios, { AxiosError } from 'axios';
 import LinkPort from '../../domain/LinkPort';
 import Link from '../../domain/Link';
 import NoContentError from './NoContentError';
-import UnauthorizedError from './UnauthorizedError';
+import UnauthorizedAccessError from './UnauthorizedAccessError';
 import NotFoundError from './NotFoundError';
 import UnknownError from './UnknownError';
-import ForbiddenError from "./ForbiddenError";
+import ForbiddenAccessError from "./ForbiddenAccessError";
 
 export default class HTTPLinkAdapter implements LinkPort {
   async checkValid(link: Link): Promise<void> {
@@ -32,9 +32,9 @@ export default class HTTPLinkAdapter implements LinkPort {
       
       switch (statusCode) {
         case 401:
-          throw new UnauthorizedError(url);
+          throw new UnauthorizedAccessError(url);
         case 403:
-          throw new ForbiddenError(url);
+          throw new ForbiddenAccessError(url);
         case 404:
           throw new NotFoundError(url);
       }

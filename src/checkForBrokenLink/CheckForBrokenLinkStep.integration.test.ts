@@ -5,8 +5,8 @@ import HTTPLinkAdapter from './secondary/HTTPLinkAdapter';
 import NotFoundError from "./secondary/NotFoundError";
 import NoContentError from "./secondary/NoContentError";
 import UnknownError from "./secondary/UnknownError";
-import UnauthorizedError from "./secondary/UnauthorizedError";
-import ForbiddenError from "./secondary/ForbiddenError";
+import UnauthorizedAccessError from "./secondary/UnauthorizedAccessError";
+import ForbiddenAccessError from "./secondary/ForbiddenAccessError";
 
 describe('CheckForBrokenLinkStep - integration test', () => {
   describe('when the link is valid and working', () => {
@@ -50,7 +50,7 @@ describe('CheckForBrokenLinkStep - integration test', () => {
     });
 
     it('should fail', async () => {
-      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/401'))).rejects.toThrow(UnauthorizedError);
+      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/401'))).rejects.toThrow(UnauthorizedAccessError);
     });
   });
 
@@ -63,7 +63,7 @@ describe('CheckForBrokenLinkStep - integration test', () => {
     });
 
     it('should fail', async () => {
-      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/403'))).rejects.toThrow(ForbiddenError);
+      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/403'))).rejects.toThrow(ForbiddenAccessError);
     });
   });
 
