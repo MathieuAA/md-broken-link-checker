@@ -2,11 +2,11 @@ import { describe, expect, it, beforeAll } from 'vitest';
 import Link from '../domain/Link';
 import CheckForBrokenLinkStep from './CheckForBrokenLinkStep';
 import HTTPLinkAdapter from './secondary/HTTPLinkAdapter';
-import NotFoundError from "../domain/linkErrors/NotFoundError";
-import NoContentError from "../domain/linkErrors/NoContentError";
-import UnknownError from "../domain/linkErrors/UnknownError";
-import UnauthorizedAccessError from "../domain/linkErrors/UnauthorizedAccessError";
-import ForbiddenAccessError from "../domain/linkErrors/ForbiddenAccessError";
+import NotFoundError from '../domain/linkErrors/NotFoundError';
+import NoContentError from '../domain/linkErrors/NoContentError';
+import UnknownError from '../domain/linkErrors/UnknownError';
+import UnauthorizedAccessError from '../domain/linkErrors/UnauthorizedAccessError';
+import ForbiddenAccessError from '../domain/linkErrors/ForbiddenAccessError';
 
 describe('CheckForBrokenLinkStep - integration test', () => {
   describe('when the link is valid and working', () => {
@@ -17,7 +17,6 @@ describe('CheckForBrokenLinkStep - integration test', () => {
       const step = new CheckForBrokenLinkStep(httpService);
       try {
         await step.execute(new Link('Test link', 'https://httpstat.us/200'));
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         caughtError = error as Error;
       }
@@ -37,7 +36,9 @@ describe('CheckForBrokenLinkStep - integration test', () => {
     });
 
     it('should fail', async () => {
-      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/204'))).rejects.toThrow(NoContentError);
+      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/204'))).rejects.toThrow(
+        NoContentError
+      );
     });
   });
 
@@ -50,7 +51,9 @@ describe('CheckForBrokenLinkStep - integration test', () => {
     });
 
     it('should fail', async () => {
-      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/401'))).rejects.toThrow(UnauthorizedAccessError);
+      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/401'))).rejects.toThrow(
+        UnauthorizedAccessError
+      );
     });
   });
 
@@ -63,10 +66,11 @@ describe('CheckForBrokenLinkStep - integration test', () => {
     });
 
     it('should fail', async () => {
-      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/403'))).rejects.toThrow(ForbiddenAccessError);
+      await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/403'))).rejects.toThrow(
+        ForbiddenAccessError
+      );
     });
   });
-
 
   describe('when the link is invalid', () => {
     describe('because the ressource does not exist (404)', () => {
@@ -78,7 +82,9 @@ describe('CheckForBrokenLinkStep - integration test', () => {
       });
 
       it('should fail', async () => {
-        await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/404'))).rejects.toThrow(NotFoundError);
+        await expect(() => step.execute(new Link('Test link', 'https://httpstat.us/404'))).rejects.toThrow(
+          NotFoundError
+        );
       });
     });
   });

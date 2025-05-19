@@ -1,8 +1,6 @@
 {
   "name": "md-broken-link-checker",
   "version": "0.0.1",
-  "main": "index.js",
-  "type": "module",
   "scripts": {
     "check-compilation-errors": "tsc --noEmit true -p .",
     "prepare": "husky",
@@ -19,10 +17,13 @@
     "axios": "1.9.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "3.3.1",
+    "@eslint/js": "9.27.0",
     "@types/node": "22.15.17",
     "@typescript-eslint/eslint-plugin": "8.32.0",
     "@typescript-eslint/parser": "8.32.0",
     "eslint": "9.26.0",
+    "globals": "16.1.0",
     "husky": "9.1.7",
     "lint-staged": "15.5.2",
     "prettier": "3.5.3",

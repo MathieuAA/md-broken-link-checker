@@ -1,4 +1,4 @@
-import Link from "../Link";
+import Link from '../Link';
 
 export default class ForbiddenAccessError extends Error {
   constructor(link: Link) {

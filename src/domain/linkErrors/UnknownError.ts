@@ -1,4 +1,4 @@
-import Link from "../Link";
+import Link from '../Link';
 
 export default class UnknownError extends Error {
   constructor(link: Link, additionalInfo: Record<string, unknown> = {}) {
