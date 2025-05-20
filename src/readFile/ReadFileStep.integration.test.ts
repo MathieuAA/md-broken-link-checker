@@ -6,7 +6,7 @@ import { FileNotFoundError } from './secondary/FileNotFoundError';
 import { WrongFileExtensionError } from './WrongFileExtensionError';
 import ReadFileStep from './ReadFileStep';
 import FileSystemFileContentAdapter from './secondary/FileSystemFileContentAdapter';
-import FileContent from '../domain/FileContent';
+import FileContent from '../domain/files/FileContent';
 
 describe('ReadFileStep - integration test', () => {
   describe('when providing a valid MD file', () => {

@@ -4,10 +4,10 @@
   "scripts": {
     "check-compilation-errors": "tsc --noEmit true -p .",
     "prepare": "husky",
-    "test": "vitest --config base.vitest.config.js",
+    "test": "vitest --config base.vitest.config.mjs",
     "test:watch": "vitest",
-    "test:unit": "vitest --config unit.vitest.config.js",
-    "test:integration": "vitest --config integration.vitest.config.js"
+    "test:unit": "vitest --config unit.vitest.config.mjs",
+    "test:integration": "vitest --config integration.vitest.config.mjs"
   },
   "keywords": [],
   "author": "MathieuAA (https://github.com/MathieuAA)",

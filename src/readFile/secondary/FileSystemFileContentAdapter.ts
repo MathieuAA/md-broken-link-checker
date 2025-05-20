@@ -1,6 +1,6 @@
 import * as fs from 'node:fs';
-import FileContent from '../../domain/FileContent';
-import FileContentPort from '../../domain/FileContentPort';
+import FileContent from '../../domain/files/FileContent';
+import FileContentPort from '../../domain/files/FileContentPort';
 import { FileNotFoundError } from './FileNotFoundError';
 
 export default class FileSystemFileContentAdapter implements FileContentPort {

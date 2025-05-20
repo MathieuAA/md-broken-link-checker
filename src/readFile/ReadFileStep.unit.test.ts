@@ -2,7 +2,7 @@ import { describe, expect, it, beforeAll } from 'vitest';
 import { FileNotFoundError } from './secondary/FileNotFoundError';
 import { WrongFileExtensionError } from './WrongFileExtensionError';
 import ReadFileStep from './ReadFileStep';
-import FileContent from '../domain/FileContent';
+import FileContent from '../domain/files/FileContent';
 import InMemoryFileContentAdapter from './secondary/InMemoryFileContentAdapter';
 
 describe('ReadFileStep - unit test', () => {

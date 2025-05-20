@@ -1,11 +1,13 @@
 import axios, { AxiosError } from 'axios';
-import LinkPort from '../../domain/LinkPort';
-import Link from '../../domain/Link';
-import NoContentError from '../../domain/linkErrors/NoContentError';
-import UnauthorizedAccessError from '../../domain/linkErrors/UnauthorizedAccessError';
-import NotFoundError from '../../domain/linkErrors/NotFoundError';
-import UnknownError from '../../domain/linkErrors/UnknownError';
-import ForbiddenAccessError from '../../domain/linkErrors/ForbiddenAccessError';
+import LinkPort from '../../domain/links/LinkPort';
+import Link from '../../domain/links/Link';
+import {
+  ForbiddenAccessError,
+  NoContentError,
+  NotFoundError,
+  UnauthorizedAccessError,
+  UnknownError,
+} from '../../domain/linkErrors/LinkErrors';
 
 export default class HTTPLinkAdapter implements LinkPort {
   async checkValid(link: Link): Promise<void> {
@@ -15,7 +17,7 @@ export default class HTTPLinkAdapter implements LinkPort {
       const response = await axios.head(url.toString());
 
       if (response.status === 204) {
-        throw new NoContentError(url);
+        throw new NoContentError(link);
       }
     } catch (error) {
       if (error instanceof NoContentError) {
