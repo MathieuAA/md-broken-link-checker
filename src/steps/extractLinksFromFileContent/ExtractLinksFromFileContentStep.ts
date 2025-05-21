@@ -1,5 +1,5 @@
-import FileContent from '../domain/files/FileContent';
-import Link from '../domain/links/Link';
+import FileContent from '../../domain/files/FileContent';
+import Link from '../../domain/links/Link';
 
 export default class ExtractLinksFromFileContentStep {
   execute(fileContent: FileContent): Link[] {

@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import FileContent from '../domain/files/FileContent';
-import Link from '../domain/links/Link';
+import FileContent from '../../domain/files/FileContent';
+import Link from '../../domain/links/Link';
 import ExtractLinksFromFileContentStep from './ExtractLinksFromFileContentStep';
 
 describe('ExtractLinksFromFileContent', () => {

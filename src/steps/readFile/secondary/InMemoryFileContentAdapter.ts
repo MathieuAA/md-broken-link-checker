@@ -1,5 +1,5 @@
-import FileContent from '../../domain/files/FileContent';
-import FileContentPort from '../../domain/files/FileContentPort';
+import FileContent from '../../../domain/files/FileContent';
+import FileContentPort from '../../../domain/files/FileContentPort';
 
 export default class InMemoryFileContentAdapter implements FileContentPort {
   constructor(private readonly behaviour: Behaviour) {}
