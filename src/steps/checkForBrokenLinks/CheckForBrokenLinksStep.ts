@@ -3,7 +3,7 @@ import Link from '../../domain/links/Link';
 import CheckedLink from '../../domain/checkedLinks/CheckedLink';
 import { OkayCheckResult, BrokenCheckResult } from '../../domain/checkedLinks/CheckResult';
 
-export default class CheckForBrokenLinks {
+export default class CheckForBrokenLinksStep {
   constructor(private readonly linkPort: LinkPort) {}
 
   async execute(links: Link[]): Promise<CheckedLink[]> {

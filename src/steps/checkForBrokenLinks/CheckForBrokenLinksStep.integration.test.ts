@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeAll } from 'vitest';
 import Link from '../../domain/links/Link';
-import CheckForBrokenLinks from './CheckForBrokenLinks';
+import CheckForBrokenLinksStep from './CheckForBrokenLinksStep';
 import HTTPLinkAdapter from './secondary/HTTPLinkAdapter';
 import CheckedLink from '../../domain/checkedLinks/CheckedLink';
 import { BrokenCheckResult, CheckResultStatus } from '../../domain/checkedLinks/CheckResult';
@@ -18,7 +18,7 @@ describe('CheckForBrokenLinkStep - integration test', () => {
 
     beforeAll(async () => {
       const httpService = new HTTPLinkAdapter();
-      const step = new CheckForBrokenLinks(httpService);
+      const step = new CheckForBrokenLinksStep(httpService);
       checkedLinks = await step.execute([
         new Link('Test link 1', 'https://httpstat.us/200'),
         new Link('Test link 2', 'https://httpstat.us/200'),
@@ -73,7 +73,7 @@ function testMixedResultsCase(
 
   beforeAll(async () => {
     const httpService = new HTTPLinkAdapter();
-    const step = new CheckForBrokenLinks(httpService);
+    const step = new CheckForBrokenLinksStep(httpService);
     checkedLinks = await step.execute([
       new Link('Test link 1', 'https://httpstat.us/200'),
       new Link('Test link 2', `https://httpstat.us/${httpStatusCodeForSecondLink}`),
