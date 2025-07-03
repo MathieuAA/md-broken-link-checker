@@ -3,7 +3,6 @@ import Link from '../../domain/links/Link';
 import CheckForBrokenLinksStep from './CheckForBrokenLinksStep';
 import HTTPLinkAdapter from './secondary/HTTPLinkAdapter';
 import CheckedLink from '../../domain/checkedLinks/CheckedLink';
-import { BrokenCheckResult, CheckResultStatus } from '../../domain/checkedLinks/CheckResult';
 import {
   ForbiddenAccessError,
   NoContentError,
@@ -30,45 +29,45 @@ describe('CheckForBrokenLinkStep - unit test', () => {
 
     it('should return a list of okay links', async () => {
       checkedLinks.map((checkedLink) => {
-        expect(checkedLink.result.getStatus()).to.equal(CheckResultStatus.OKAY);
+        expect(checkedLink.isBroken()).to.be.false;
       });
     });
   });
 
   describe('when a link is valid but there is no response (204)', () => {
-    testErrorCase(new NoContentError(new URL('https://www.toto.com')), (result) => {
-      expect(result.getError()).to.be.instanceOf(BrokenLinkError);
+    testErrorCase(new NoContentError(new URL('https://www.toto.com')), (error: Error) => {
+      expect(error).to.be.instanceOf(BrokenLinkError);
     });
   });
 
   describe('when a link is valid but an authorization is needed (401)', () => {
-    testErrorCase(new UnauthorizedAccessError(new URL('https://www.toto.com')), (result: BrokenCheckResult) => {
-      expect(result.getError()).to.be.instanceOf(BrokenLinkError);
+    testErrorCase(new UnauthorizedAccessError(new URL('https://www.toto.com')), (error: Error) => {
+      expect(error).to.be.instanceOf(BrokenLinkError);
     });
   });
 
   describe('when a link is valid but it is forbidden (403)', () => {
-    testErrorCase(new ForbiddenAccessError(new URL('https://www.toto.com')), (result: BrokenCheckResult) => {
-      expect(result.getError()).to.be.instanceOf(BrokenLinkError);
+    testErrorCase(new ForbiddenAccessError(new URL('https://www.toto.com')), (error: Error) => {
+      expect(error).to.be.instanceOf(BrokenLinkError);
     });
   });
 
   describe('when the link is invalid', () => {
     describe('because the ressource does not exist (404)', () => {
-      testErrorCase(new NotFoundError(new URL('https://www.toto.com')), (result: BrokenCheckResult) => {
-        expect(result.getError()).to.be.instanceOf(BrokenLinkError);
+      testErrorCase(new NotFoundError(new URL('https://www.toto.com')), (error: Error) => {
+        expect(error).to.be.instanceOf(BrokenLinkError);
       });
     });
   });
 
   describe('when an unknown error appears', () => {
-    testErrorCase(new UnknownError(new URL('https://www.toto.com')), (result: BrokenCheckResult) => {
-      expect(result.getError()).to.be.instanceOf(BrokenLinkError);
+    testErrorCase(new UnknownError(new URL('https://www.toto.com')), (error: Error) => {
+      expect(error).to.be.instanceOf(BrokenLinkError);
     });
   });
 });
 
-function testErrorCase(error: Error, customAssertion: (result: BrokenCheckResult) => void) {
+function testErrorCase(error: Error, customAssertion: (error: Error) => void) {
   let checkedLinks: CheckedLink[];
 
   beforeAll(async () => {
@@ -79,8 +78,7 @@ function testErrorCase(error: Error, customAssertion: (result: BrokenCheckResult
   });
 
   it('should return the list of mixed results', async () => {
-    const result = checkedLinks[0].result as BrokenCheckResult;
-    expect(result.getStatus()).to.equal(CheckResultStatus.BROKEN);
-    customAssertion(result);
+    expect(checkedLinks[0].isBroken()).to.be.true;
+    customAssertion(checkedLinks[0].getError()!);
   });
 }

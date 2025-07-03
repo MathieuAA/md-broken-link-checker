@@ -12,10 +12,7 @@ export default class CheckForBrokenLinksStep {
       const link = links[index];
       const checkResult = result.status === 'fulfilled' ? new OkayCheckResult() : new BrokenCheckResult(result.reason);
 
-      return {
-        link,
-        result: checkResult,
-      };
+      return new CheckedLink(link, checkResult) as CheckedLink;
     });
   }
 }

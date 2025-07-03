@@ -3,7 +3,6 @@ import Link from '../../domain/links/Link';
 import CheckForBrokenLinksStep from './CheckForBrokenLinksStep';
 import HTTPLinkAdapter from './secondary/HTTPLinkAdapter';
 import CheckedLink from '../../domain/checkedLinks/CheckedLink';
-import { BrokenCheckResult, CheckResultStatus } from '../../domain/checkedLinks/CheckResult';
 import {
   ForbiddenAccessError,
   NoContentError,
@@ -28,49 +27,46 @@ describe('CheckForBrokenLinkStep - integration test', () => {
     });
 
     it('should return a list of okay links', async () => {
-      checkedLinks.map((checkedLink, index) => {
-        expect(checkedLink.result.getStatus()).to.equal(CheckResultStatus.OKAY);
+      checkedLinks.forEach((checkedLink) => {
+        expect(checkedLink.isBroken()).to.be.false;
       });
     });
   });
 
   describe('when a link is valid but there is no response (204)', () => {
-    testMixedResultsCase(204, (result) => {
-      expect(result.getError()).to.be.instanceOf(NoContentError);
+    testMixedResultsCase(204, (error) => {
+      expect(error).to.be.instanceOf(NoContentError);
     });
   });
 
   describe('when a link is valid but an authorization is needed (401)', () => {
-    testMixedResultsCase(401, (result) => {
-      expect(result.getError()).to.be.instanceOf(UnauthorizedAccessError);
+    testMixedResultsCase(401, (error) => {
+      expect(error).to.be.instanceOf(UnauthorizedAccessError);
     });
   });
 
   describe('when a link is valid but it is forbidden (403)', () => {
-    testMixedResultsCase(403, (result) => {
-      expect(result.getError()).to.be.instanceOf(ForbiddenAccessError);
+    testMixedResultsCase(403, (error) => {
+      expect(error).to.be.instanceOf(ForbiddenAccessError);
     });
   });
 
   describe('when the link is invalid', () => {
     describe('because the ressource does not exist (404)', () => {
-      testMixedResultsCase(404, (result) => {
-        expect(result.getError()).to.be.instanceOf(NotFoundError);
+      testMixedResultsCase(404, (error) => {
+        expect(error).to.be.instanceOf(NotFoundError);
       });
     });
   });
 
   describe('when an unknown error appears', () => {
-    testMixedResultsCase(500, (result) => {
-      expect(result.getError()).to.be.instanceOf(UnknownError);
+    testMixedResultsCase(500, (error) => {
+      expect(error).to.be.instanceOf(UnknownError);
     });
   });
 });
 
-function testMixedResultsCase(
-  httpStatusCodeForSecondLink: number,
-  customAssertion: (result: BrokenCheckResult) => void
-) {
+function testMixedResultsCase(httpStatusCodeForSecondLink: number, customAssertion: (error: Error) => void) {
   let checkedLinks: CheckedLink[];
 
   beforeAll(async () => {
@@ -84,9 +80,9 @@ function testMixedResultsCase(
   });
 
   it('should return the list of mixed results', async () => {
-    expect(checkedLinks[0].result.getStatus()).to.equal(CheckResultStatus.OKAY);
-    const result = checkedLinks[1].result as BrokenCheckResult;
-    expect(result.getStatus()).to.equal(CheckResultStatus.BROKEN);
-    customAssertion(result);
+    expect(checkedLinks[0].isBroken()).to.be.false;
+    const result = checkedLinks[1];
+    expect(checkedLinks[1].isBroken()).to.be.true;
+    customAssertion(result.getError()!);
   });
 }
