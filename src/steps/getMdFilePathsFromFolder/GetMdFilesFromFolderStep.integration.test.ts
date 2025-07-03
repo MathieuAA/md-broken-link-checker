@@ -5,6 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import GetMdFilePathsFromFolderStep from './GetMdFilesFromFolderStep';
 import FileAdapter from './secondary/FileAdapter';
 import Folder from '../../domain/files/Folder';
+import FastGlobFileSystemService from '../../shared/fileSystem/FastGlobFileSystemService';
 
 describe('GetMdFilesFromFolderStep - integration tests', () => {
   describe('when there are MD files in the folder', () => {
@@ -16,7 +17,8 @@ describe('GetMdFilesFromFolderStep - integration tests', () => {
       await createEmptyFile(path.join(folderPath, 'test_file0.txt'));
       await createEmptyFile(path.join(folderPath, 'test_file1.md'));
       await createEmptyFile(path.join(folderPath, 'test_file2.md'));
-      const fileAdapter = new FileAdapter();
+      const fileSystemService = new FastGlobFileSystemService();
+      const fileAdapter = new FileAdapter(fileSystemService);
       const step = new GetMdFilePathsFromFolderStep(fileAdapter);
       folder = await step.execute(folderPath);
     });
@@ -48,7 +50,8 @@ describe('GetMdFilesFromFolderStep - integration tests', () => {
       await createEmptyFile(path.join(folderPath, 'test_file2.md'));
       await createDirectory(path.join(folderPath, 'test_folder'));
       await createEmptyFile(path.join(path.join(folderPath, 'test_folder'), 'test_file3.md'));
-      const fileAdapter = new FileAdapter();
+      const fileSystemService = new FastGlobFileSystemService();
+      const fileAdapter = new FileAdapter(fileSystemService);
       const step = new GetMdFilePathsFromFolderStep(fileAdapter);
       folder = await step.execute(folderPath);
     });
@@ -78,7 +81,8 @@ describe('GetMdFilesFromFolderStep - integration tests', () => {
       await createEmptyFile(path.join(folderPath, 'test_file0.txt'));
       await createDirectory(path.join(folderPath, 'test_folder'));
       await createEmptyFile(path.join(path.join(folderPath, 'test_folder'), 'test_file3.sql'));
-      const fileAdapter = new FileAdapter();
+      const fileSystemService = new FastGlobFileSystemService();
+      const fileAdapter = new FileAdapter(fileSystemService);
       const step = new GetMdFilePathsFromFolderStep(fileAdapter);
       folder = await step.execute(folderPath);
     });
