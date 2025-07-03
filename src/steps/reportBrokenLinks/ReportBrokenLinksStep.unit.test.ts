@@ -45,4 +45,31 @@ Broken links found: 3
 `);
     });
   });
+
+  describe('when there are no broken links', () => {
+    let result: string;
+
+    beforeAll(() => {
+      const checkedLinks: CheckedLink[] = [
+        new CheckedLink(new Link('Unbroken link 1', 'https://httpstat.us/200'), {
+          getStatus: () => CheckResultStatus.OKAY,
+        }),
+        new CheckedLink(new Link('Unbroken link 2', 'https://httpstat.us/200'), {
+          getStatus: () => CheckResultStatus.OKAY,
+        }),
+        new CheckedLink(new Link('Unbroken link 3', 'https://httpstat.us/200'), {
+          getStatus: () => CheckResultStatus.OKAY,
+        }),
+      ];
+      const step = new ReportBrokenLinksStep();
+      result = step.execute([new File('a'), new File('b'), new File('c')], checkedLinks);
+    });
+
+    it('should report it', () => {
+      expect(result).to.equal(`Files checked: 3
+Links checked: 3
+Broken links found: 0
+`);
+    });
+  });
 });
