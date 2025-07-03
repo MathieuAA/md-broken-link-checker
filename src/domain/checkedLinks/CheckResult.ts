@@ -1,4 +1,4 @@
-import LinkErrors from '../linkErrors/LinkErrors';
+import BrokenLinkError from '../links/BrokenLinkError';
 
 export interface CheckResult {
   getStatus: () => CheckResultStatus;
@@ -11,13 +11,13 @@ export class OkayCheckResult implements CheckResult {
 }
 
 export class BrokenCheckResult implements CheckResult {
-  constructor(private readonly error: Error) {}
+  constructor(private readonly error: BrokenLinkError) {}
 
   getStatus(): CheckResultStatus {
     return CheckResultStatus.BROKEN;
   }
 
-  getError(): LinkErrors {
+  getError(): BrokenLinkError {
     return this.error;
   }
 }

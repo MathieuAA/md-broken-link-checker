@@ -11,14 +11,15 @@ import {
   UnauthorizedAccessError,
   UnknownError,
 } from '../../shared/http/HttpErrors';
-import AxiosHttpService from '../../shared/http/AxiosHttpService';
+import FakeHttpService from '../../shared/http/FakeHttpService';
+import BrokenLinkError from '../../domain/links/BrokenLinkError';
 
-describe('CheckForBrokenLinkStep - integration test', () => {
+describe('CheckForBrokenLinkStep - unit test', () => {
   describe('when the link are valid and working', () => {
     let checkedLinks: CheckedLink[];
 
     beforeAll(async () => {
-      const httpService = new AxiosHttpService();
+      const httpService = new FakeHttpService({ head: { success: { status: 200 } } });
       const linkAdapter = new HTTPLinkAdapter(httpService);
       const step = new CheckForBrokenLinksStep(linkAdapter);
       checkedLinks = await step.execute([
@@ -28,64 +29,57 @@ describe('CheckForBrokenLinkStep - integration test', () => {
     });
 
     it('should return a list of okay links', async () => {
-      checkedLinks.map((checkedLink, index) => {
+      checkedLinks.map((checkedLink) => {
         expect(checkedLink.result.getStatus()).to.equal(CheckResultStatus.OKAY);
       });
     });
   });
 
   describe('when a link is valid but there is no response (204)', () => {
-    testMixedResultsCase(204, (result) => {
-      expect(result.getError()).to.be.instanceOf(NoContentError);
+    testErrorCase(new NoContentError(new URL('https://www.toto.com')), (result) => {
+      expect(result.getError()).to.be.instanceOf(BrokenLinkError);
     });
   });
 
   describe('when a link is valid but an authorization is needed (401)', () => {
-    testMixedResultsCase(401, (result) => {
-      expect(result.getError()).to.be.instanceOf(UnauthorizedAccessError);
+    testErrorCase(new UnauthorizedAccessError(new URL('https://www.toto.com')), (result: BrokenCheckResult) => {
+      expect(result.getError()).to.be.instanceOf(BrokenLinkError);
     });
   });
 
   describe('when a link is valid but it is forbidden (403)', () => {
-    testMixedResultsCase(403, (result) => {
-      expect(result.getError()).to.be.instanceOf(ForbiddenAccessError);
+    testErrorCase(new ForbiddenAccessError(new URL('https://www.toto.com')), (result: BrokenCheckResult) => {
+      expect(result.getError()).to.be.instanceOf(BrokenLinkError);
     });
   });
 
   describe('when the link is invalid', () => {
     describe('because the ressource does not exist (404)', () => {
-      testMixedResultsCase(404, (result) => {
-        expect(result.getError()).to.be.instanceOf(NotFoundError);
+      testErrorCase(new NotFoundError(new URL('https://www.toto.com')), (result: BrokenCheckResult) => {
+        expect(result.getError()).to.be.instanceOf(BrokenLinkError);
       });
     });
   });
 
   describe('when an unknown error appears', () => {
-    testMixedResultsCase(500, (result) => {
-      expect(result.getError()).to.be.instanceOf(UnknownError);
+    testErrorCase(new UnknownError(new URL('https://www.toto.com')), (result: BrokenCheckResult) => {
+      expect(result.getError()).to.be.instanceOf(BrokenLinkError);
     });
   });
 });
 
-function testMixedResultsCase(
-  httpStatusCodeForSecondLink: number,
-  customAssertion: (result: BrokenCheckResult) => void
-) {
+function testErrorCase(error: Error, customAssertion: (result: BrokenCheckResult) => void) {
   let checkedLinks: CheckedLink[];
 
   beforeAll(async () => {
-    const httpService = new AxiosHttpService();
+    const httpService = new FakeHttpService({ head: { error } });
     const linkAdapter = new HTTPLinkAdapter(httpService);
     const step = new CheckForBrokenLinksStep(linkAdapter);
-    checkedLinks = await step.execute([
-      new Link('Test link 1', 'https://httpstat.us/200'),
-      new Link('Test link 2', `https://httpstat.us/${httpStatusCodeForSecondLink}`),
-    ]);
+    checkedLinks = await step.execute([new Link('Test link', 'https://www.toto.com')]);
   });
 
   it('should return the list of mixed results', async () => {
-    expect(checkedLinks[0].result.getStatus()).to.equal(CheckResultStatus.OKAY);
-    const result = checkedLinks[1].result as BrokenCheckResult;
+    const result = checkedLinks[0].result as BrokenCheckResult;
     expect(result.getStatus()).to.equal(CheckResultStatus.BROKEN);
     customAssertion(result);
   });
