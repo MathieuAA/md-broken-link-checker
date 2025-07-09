@@ -3,14 +3,8 @@ import Link from '../../domain/links/Link';
 import CheckForBrokenLinksStep from './CheckForBrokenLinksStep';
 import HTTPLinkAdapter from './secondary/HTTPLinkAdapter';
 import CheckedLink from '../../domain/checkedLinks/CheckedLink';
-import {
-  ForbiddenAccessError,
-  NoContentError,
-  NotFoundError,
-  UnauthorizedAccessError,
-  UnknownError,
-} from '../../shared/http/HttpErrors';
 import AxiosHttpService from '../../shared/http/AxiosHttpService';
+import BrokenLinkError from '../../domain/links/BrokenLinkError';
 
 describe('CheckForBrokenLinkStep - integration test', () => {
   describe('when the link are valid and working', () => {
@@ -21,8 +15,8 @@ describe('CheckForBrokenLinkStep - integration test', () => {
       const linkAdapter = new HTTPLinkAdapter(httpService);
       const step = new CheckForBrokenLinksStep(linkAdapter);
       checkedLinks = await step.execute([
-        new Link('Test link 1', 'https://httpstat.us/200'),
-        new Link('Test link 2', 'https://httpstat.us/200'),
+        new Link('Test link 1', 'https://httpbingo.org/status/200'),
+        new Link('Test link 2', 'https://httpbingo.org/status/200'),
       ]);
     });
 
@@ -35,33 +29,33 @@ describe('CheckForBrokenLinkStep - integration test', () => {
 
   describe('when a link is valid but there is no response (204)', () => {
     testMixedResultsCase(204, (error) => {
-      expect(error).to.be.instanceOf(NoContentError);
+      expect(error).to.be.instanceOf(BrokenLinkError);
     });
   });
 
   describe('when a link is valid but an authorization is needed (401)', () => {
     testMixedResultsCase(401, (error) => {
-      expect(error).to.be.instanceOf(UnauthorizedAccessError);
+      expect(error).to.be.instanceOf(BrokenLinkError);
     });
   });
 
   describe('when a link is valid but it is forbidden (403)', () => {
     testMixedResultsCase(403, (error) => {
-      expect(error).to.be.instanceOf(ForbiddenAccessError);
+      expect(error).to.be.instanceOf(BrokenLinkError);
     });
   });
 
   describe('when the link is invalid', () => {
     describe('because the ressource does not exist (404)', () => {
       testMixedResultsCase(404, (error) => {
-        expect(error).to.be.instanceOf(NotFoundError);
+        expect(error).to.be.instanceOf(BrokenLinkError);
       });
     });
   });
 
   describe('when an unknown error appears', () => {
     testMixedResultsCase(500, (error) => {
-      expect(error).to.be.instanceOf(UnknownError);
+      expect(error).to.be.instanceOf(BrokenLinkError);
     });
   });
 });
@@ -74,8 +68,8 @@ function testMixedResultsCase(httpStatusCodeForSecondLink: number, customAsserti
     const linkAdapter = new HTTPLinkAdapter(httpService);
     const step = new CheckForBrokenLinksStep(linkAdapter);
     checkedLinks = await step.execute([
-      new Link('Test link 1', 'https://httpstat.us/200'),
-      new Link('Test link 2', `https://httpstat.us/${httpStatusCodeForSecondLink}`),
+      new Link('Test link 1', 'https://httpbingo.org/status/200'),
+      new Link('Test link 2', `https://httpbingo.org/status/${httpStatusCodeForSecondLink}`),
     ]);
   });
 

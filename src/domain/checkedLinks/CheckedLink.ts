@@ -8,8 +8,8 @@ export default class CheckedLink {
     private readonly link: Link,
     private readonly result: CheckResult
   ) {
-    if (this.result.getStatus() === CheckResultStatus.BROKEN) {
-      this.error = (this.result as BrokenCheckResult).getError();
+    if (result.getStatus() === CheckResultStatus.BROKEN) {
+      this.error = (result as BrokenCheckResult).getError();
     }
   }
 

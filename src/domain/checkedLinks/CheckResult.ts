@@ -1,7 +1,9 @@
 import BrokenLinkError from '../links/BrokenLinkError';
+import NotImplementedException from '../../shared/errors/NotImplementedException';
 
 export interface CheckResult {
   getStatus: () => CheckResultStatus;
+  getError?: () => BrokenLinkError;
 }
 
 export class OkayCheckResult implements CheckResult {
